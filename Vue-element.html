@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>hello vue</title>
+    <!-- 引入vue-->
+    <script src="https://vuejs.org/js/vue.min.js"></script>
+    <!-- 引入element样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <!-- 引入element组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入element样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <style>
+        .el-carousel__item .images {
+            color: #475669;
+            font-size: 18px;
+            opacity: 0.75;
+            line-height: 300px;
+            margin: 0;
+        }
+
+        .el-carousel__item:nth-child(2n) {
+            background-color: #99a9bf;
+        }
+
+        .el-carousel__item:nth-child(2n+1) {
+            background-color: #d3dce6;
+        }
+
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            padding: 18px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .box-card {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="carouselBanners">
+        <template>
+            <el-carousel arrow="never">
+                <el-carousel-item v-for="item in items" :key="item">
+                 <div class="images"><img v-bind:src=item.url /></div>
+                </el-carousel-item>
+            </el-carousel>
+        </template>
+
+    </div>
+
+    <div id="someWeixinNews">
+        <template>
+            <el-card class="box-card">
+                <div v-for="weixinNewsLi in results" :key="weixinNewsLi" class="text item">
+                    vue开发者：{{ weixinNewsLi.commit.author.name }}，commit@{{ weixinNewsLi.commit.author.date }}
+                </div>
+            </el-card>
+        </template>
+
+    </div>
+
+
+
+    <script>
+        var app = new Vue({
+            el: '#carouselBanners',
+            data: {
+                items:[
+                { id: 1, url: 'https://ss3.bdstatic.com/lPoZeXSm1A5BphGlnYG/skin/34.jpg' },
+                { id: 2, url: 'https://ss3.bdstatic.com/lPoZeXSm1A5BphGlnYG/skin/34.jpg' },
+                { id: 3, url: 'https://ss3.bdstatic.com/lPoZeXSm1A5BphGlnYG/skin/34.jpg' },
+                { id: 4, url: 'https://ss3.bdstatic.com/lPoZeXSm1A5BphGlnYG/skin/34.jpg' },
+                { id: 5, url: 'https://ss3.bdstatic.com/lPoZeXSm1A5BphGlnYG/skin/34.jpg' }
+                ]
+            }
+        });
+    </script>
+
+    <script>
+        //apiURL = 'http://baijia.baidu.com/listarticle?ajax=json&cat=1&_limit=20&_skip=0'
+        var apiURL = 'https://api.github.com/repos/vuejs/vue/commits?per_page=20&sha=';
+
+
+        var demo = new Vue({
+
+            el: '#someWeixinNews',
+
+            data: {
+                results: null
+            },
+
+            created: function () {
+                this.fetchData()
+            },
+
+            filters: {
+                truncate: function (v) {
+                    var newline = v.indexOf('\n')
+                    return newline > 0 ? v.slice(0, newline) : v
+                },
+                formatDate: function (v) {
+                    return v.replace(/T|Z/g, ' ')
+                }
+            },
+
+            methods: {
+                fetchData: function () {
+                    var xhr = new XMLHttpRequest()
+                    var self = this
+                    xhr.open('GET', apiURL)
+                    xhr.onload = function () {
+                        self.results = JSON.parse(xhr.responseText)
+                        console.log(self.results[0])
+                    }
+                    xhr.send()
+                }
+            }
+        })
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>
